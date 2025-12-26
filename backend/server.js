@@ -32,19 +32,19 @@ app.options("*", cors());
 
 app.use(express.json());
 
-// MySQL connection and other logic (using connection pool)
-const pool = mysql.createPool({ // Create the pool here
-  host: process.env.DB_HOST || "db4free.net",
-  user: process.env.DB_USER || "react_dm",
-  password: process.env.DB_PASSWORD || "react_dm",
-  database: process.env.DB_NAME || "react_dm",
-  connectionLimit: 3, // Start with a small limit
+// MySQL connection 
+const pool = mysql.createPool({ 
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  connectionLimit: 3,
 });
 
-// Keep-alive route (before other routes)
+// Keep-alive route 
 app.get('/keepalive', (req, res) => res.send('OK'));
 
-// Helper function for database queries (with retry logic)
+// Helper function for database queries 
 function executeQuery(sql, values, res) {
   const maxRetries = 3;
   let retryCount = 0;
@@ -66,11 +66,11 @@ function executeQuery(sql, values, res) {
       }
     });
   }
-  attemptQuery(); // Start the initial query attempt
+  attemptQuery(); 
 }
 
 
-// Your POST routes (using executeQuery and the connection pool)
+
 app.post("/save-buttons", (req, res) => {
   const { ClientNeed } = req.body;
   if (!ClientNeed) {
@@ -78,7 +78,7 @@ app.post("/save-buttons", (req, res) => {
   }
   const sql = "INSERT INTO form1_client_need (client_need) VALUES (?)";
   const values = [ClientNeed];
-  executeQuery(sql, values, res); // Use the helper function
+  executeQuery(sql, values, res);
 });
 
 app.post("/save-goals", (req, res) => {
